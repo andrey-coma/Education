@@ -35,6 +35,21 @@ arr = [5, 8, 6, 4, 9, 2, 7, 3]
 """
 arr = [5, 8, 6, 4, 9, 2, 7, 3]
 
+# 1 способ
+
+max_num = 0
+
+for idx, i in enumerate(range(len(arr)), 1):
+    if arr[i] == arr[-1]:
+        idx = 0
+    total = arr[i] + arr[i - 1] + arr[idx]
+    if total > max_num:
+        max_num = total
+
+print(max_num)
+
+
+# 2 способ
 
 total_data = []
 
@@ -48,3 +63,5 @@ for idx, i in enumerate(arr):
         total_data.append(i + arr[idx - 1] + arr[idx + 1])
 
 print(max(total_data))
+
+
