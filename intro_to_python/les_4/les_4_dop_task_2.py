@@ -76,8 +76,10 @@ while count < len(arr[0]) * len(arr):  # максимальное кол-во п
 
     count += 1
 
-print(f'Выполнено за {count} проходов')
 
-print()
+print('Массив после сортировки')
+
 for i in arr:
     print([i])
+print()
+print(f'Выполнено за {count} проходов')
