@@ -13,39 +13,42 @@
 Нельзя сделать палиндромом
 """
 
+from collections import Counter
 import random
 import pprint
 
-a = 'bababab'
+# Для проверки, можно ли получить палиндром, функция can_be_poly вычисляет количество символов с
+# нечетной частотой и проверяет, что их количество меньше 2. Это условие указывает на то, что строка может быть
+# переставлена в палиндром.
+def can_be_poly(message: str) -> bool:
+    result = list(filter(lambda x: x % 2, Counter(message).values()))
+    if len(result) < 2:
+        return True
+    else:
+        return False
 
-count = 10000 # кол-во подборов
-attempt = 0 # попытка
-uns_options = [] # Неподходящие варианты
-if a.count(' '):
+mes = 'abbbc'
+
+count = 1000 # кол-во подборов
+options = [] # Возможные варианты палиндромов
+
+if mes.count(' '):
     print('В вашей строке есть пробелы')
 
-else:
-    while True:
-        if count == 0:
-            print(f"Нельзя сделать палиндромом - {a}")
-            break
-
+if can_be_poly(mes):
+    # подбор полиндрома
+    for _ in range(count):
         res = ''
-        lets = [i for i in a] # перезаполняем список значениями при каждой итерации в цикле while
+        lets = [i for i in mes] # перезаполняем список значениями при каждой итерации в цикле while
         for _ in range(len(lets)):
-            rand_let = random.choice(lets) # случайно определяем и выбираем букву из списка lets
-            res += lets.pop(lets.index(rand_let)) # сохр-ем получ. бук. и удал-м ее из lets, чтобы она снова нам не попалась
+            rand_let = random.choice(lets) # случайно определяем букву из списка lets
+            res += lets.pop(lets.index(rand_let)) # сохр. получ. букву и удал-м ее из lets, для исключения повтора
 
         if res == res[::-1]:
-            print(f"Можно сделать палиндромом {a} - {res}")
-            break
+            options.append(res)  # сохраняем подходящие варианты
+else:
+    print(f"Нельзя сделать палиндромом - {mes}")
 
-        else:
-            uns_options.append(res)  # сохраняем неподходящие варианты
 
-        count -= 1
-        attempt += 1
-
-print(f'попытка - {attempt + 1}')
-print(f'Неподходящие варианты - {len(set(uns_options))}:')
-pprint.pprint(f'{set(uns_options)}')
+print(f'Возможные варианты палиндромов - {len(set(options))}:')
+pprint.pprint(f'{set(options)}')
