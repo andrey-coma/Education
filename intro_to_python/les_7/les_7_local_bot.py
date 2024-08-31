@@ -1,3 +1,7 @@
+'''
+Допзадание по желанию - сделайте свой локальный чат-бот на свою тематику.
+'''
+
 from pprint import *
 from random import *
 import json
