@@ -10,12 +10,15 @@
 100.18006 ->8
 """
 
+from decimal import *
+
 while True:
     try:
-        num = float(input('Введите любое число: '))
+        num = Decimal(input('Введите любое число: '))
 
-        if isinstance(num, float):
+        if isinstance(num, Decimal):
             num = abs(num)
+            tmp = num
             break
 
     except ValueError:
@@ -24,15 +27,15 @@ while True:
 if num < 1:  # если дробь меньше 1 или 0, тогда + 1
     num += 1
 
-if isinstance(num, float):  # Преобразуем дробную часть в целую
+if isinstance(num, Decimal):  # Преобразуем дробную часть в целую
     while True:
         if num % 1 == 0:
             num = int(num)  # Преобразуем дробь без хвоста в int
             break
         num *= 10
-        num = round(num, 5)
+        num = num.quantize(Decimal(tmp))
 
-# Считаем цыфры
+# Считаем цифры
 
 print(num)
 
