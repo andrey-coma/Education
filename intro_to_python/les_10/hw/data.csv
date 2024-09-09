@@ -1,0 +1,6 @@
+age,income,education_level,spending_score,job_title,salary,bonus,years_at_company,performance_score,department,hours_worked_per_week
+25,50000,Bachelor,75,Analyst,55000,5000,2,8,HR,40
+30,60000,Master,85,Manager,65000,7000,5,9,Sales,45
+35,70000,PhD,95,Director,75000,9000,7,10,Finance,50
+40,80000,Bachelor,80,VP,85000,12000,10,9,IT,55
+45,90000,Master,70,Executive,95000,15000,12,8,Operations,60
