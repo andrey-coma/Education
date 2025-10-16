@@ -1,0 +1,85 @@
+-- 1. Создание таблиц (один раз)
+CREATE TABLE IF NOT EXISTS categories (
+            "id" SERIAL PRIMARY KEY,
+            "name" TEXT
+            );
+CREATE UNIQUE INDEX ON categories (name);			
+
+CREATE TABLE IF NOT EXISTS products (
+            "id" SERIAL PRIMARY KEY,
+            "name" TEXT,
+            "category" INTEGER REFERENCES categories (id)
+            );
+	CREATE UNIQUE INDEX ON products (category, name);
+
+CREATE TABLE IF NOT EXISTS reviews (
+                "id" SERIAL PRIMARY KEY,
+                "author"	TEXT,
+                "comment"	TEXT,
+                "card"      TEXT,
+                "url"	TEXT,
+                "product"	INTEGER REFERENCES products (id),
+                "stars" NUMERIC,
+                "price"	NUMERIC,
+                "currency" TEXT,
+                "weight"	TEXT,
+		"date_add" TIMESTAMP,
+		"status" NUMERIC
+            );
+
+-- 2. Скрипты для переноса данных, выгруженных из файла csv, в целевые таблицы
+-- Добавление категорий (при отсутствии)
+MERGE INTO categories AS cat
+USING (select distinct category from comments) AS com
+ON name = com.category
+WHEN NOT MATCHED THEN 
+    INSERT (name) VALUES (com.category); commit;
+
+-- Заполнение ссылок на категории
+UPDATE comments AS com 
+SET category_id = (SELECT id 
+					FROM categories AS cat 
+					WHERE cat.name = com.category);
+COMMIT;
+
+-- Добавление товаров (при отсутствии)
+MERGE INTO products AS prod
+USING (select distinct product, category_id from comments) AS com
+ON name = com.product
+AND category = com.category_id
+WHEN NOT MATCHED THEN 
+    INSERT (name, category) VALUES (com.product, com.category_id); 
+COMMIT;
+
+-- Заполнение ссылок на продукты
+UPDATE comments AS com 
+SET product_id = (SELECT id 
+					FROM products AS prod 
+					WHERE prod.name = com.product
+					AND prod.category = com.category_id);
+COMMIT;
+
+-- Вставка записей в таблицу reviews
+WITH upd AS (
+SELECT author
+	, comment
+	, card
+	, url
+	, product_id
+	, stars
+	, price
+	, currency
+	, weight 
+FROM comments
+)
+INSERT INTO reviews (author, comment, card, url, product, stars, price, currency, weight, date_add) 
+SELECT *, current_timestamp FROM upd;
+COMMIT;
+DELETE FROM comments;
+COMMIT;
+
+-- Удаление таблиц (для тестирования)
+drop table reviews;
+drop table comments;
+drop table products;
+drop table categories;
